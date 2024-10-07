@@ -8,6 +8,11 @@ export interface MoviesResponse {
 }
 
 export type GenreID = (typeof GENRES)[number]['id'];
+export type GenreName = (typeof GENRES)[number]['name'];
+export interface Genre {
+  id: GenreID;
+  name: GenreName;
+}
 
 export interface Movie {
   adult: boolean;
