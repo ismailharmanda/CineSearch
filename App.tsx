@@ -1,36 +1,18 @@
 import React from 'react';
-import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
-import {useNetworkConnectivity} from './hooks';
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+import {Navigation} from './navigation/Navigation';
+import {NavigationContainer} from '@react-navigation/native';
+
+const queryClient = new QueryClient();
 
 function App(): React.JSX.Element {
-  useNetworkConnectivity();
-
   return (
-    <SafeAreaView>
-      <View>
-        <Text>Hello</Text>
-      </View>
-    </SafeAreaView>
+    <QueryClientProvider client={queryClient}>
+      <NavigationContainer>
+        <Navigation />
+      </NavigationContainer>
+    </QueryClientProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
 
 export default App;
