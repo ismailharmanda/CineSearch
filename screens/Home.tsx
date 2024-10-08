@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {
   usePopularMovies,
   useNetworkConnectivity,
@@ -9,10 +9,20 @@ import {Genre as IGenre, Movie} from '../types';
 import {GENRES} from '../constants';
 import {GenreID} from '../types';
 import {Search, MovieCard, Genre} from '../components';
+import {toggleFavorite, getFavorites} from '../utils';
 
 export const HomeScreen = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [selectedGenres, setSelectedGenres] = useState<GenreID[]>([]);
+  const [favorites, setFavorites] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchFavorites = async () => {
+      const favoritesFromStorage = await getFavorites();
+      setFavorites(favoritesFromStorage);
+    };
+    fetchFavorites();
+  }, []);
 
   const {data: popularData, fetchNextPage: fetchNextPopularPage} =
     usePopularMovies();
@@ -39,6 +49,12 @@ export const HomeScreen = () => {
 
   useNetworkConnectivity();
 
+  const onFavorite = async (movieId: number) => {
+    await toggleFavorite(movieId);
+    const favoritesFromStorage = await getFavorites();
+    setFavorites(favoritesFromStorage);
+  };
+
   const renderMovieCard = ({item}: {item: Movie}) => {
     return (
       <MovieCard
@@ -46,8 +62,8 @@ export const HomeScreen = () => {
         posterPath={item.poster_path}
         vote_average={item.vote_average}
         onPress={() => {}}
-        onToggleFavorite={() => {}}
-        favorited={false}
+        onToggleFavorite={() => onFavorite(item.id)}
+        favorited={favorites.includes(item.id.toString())}
       />
     );
   };
