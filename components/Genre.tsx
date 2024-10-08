@@ -26,12 +26,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderRadius: 28,
     paddingVertical: 4,
+    height: 30,
+    textAlign: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   activeBackground: {
     backgroundColor: '#FFC700',
   },
   text: {
     color: 'white',
-    paddingBottom: 8,
   },
 });
