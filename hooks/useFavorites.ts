@@ -11,7 +11,6 @@ export const useFavorites = () => {
       );
       return response.data;
     } catch (error) {
-      console.error('Error fetching random movies:', error);
       throw error;
     }
   };
