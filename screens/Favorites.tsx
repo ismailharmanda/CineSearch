@@ -2,6 +2,7 @@ import {useFavorites, useFavoriteMutation} from '../hooks';
 import {View, FlatList, StyleSheet} from 'react-native';
 import {Movie} from '../types';
 import {MovieCard} from '../components';
+import {useNavigation} from '@react-navigation/native';
 
 export const FavoritesScreen = () => {
   const {
@@ -11,6 +12,7 @@ export const FavoritesScreen = () => {
   } = useFavorites();
 
   const {mutateAsync} = useFavoriteMutation();
+  const navigation = useNavigation();
 
   const allFavoritesResult =
     favoritesData?.pages.map(page => page.results).flat() || [];
@@ -26,7 +28,12 @@ export const FavoritesScreen = () => {
         title={item.title}
         posterPath={item.poster_path}
         vote_average={item.vote_average}
-        onPress={() => {}}
+        onPress={() =>
+          // @ts-ignore
+          navigation.navigate('MovieDetail', {
+            movieId: item.id,
+          })
+        }
         onToggleFavorite={() => onToggleFavorite(item.id)}
         favorited={true}
       />

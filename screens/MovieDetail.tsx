@@ -8,7 +8,8 @@ import {
   ScrollView,
 } from 'react-native';
 import {useMovieDetails} from '../hooks';
-import {RouteProp, NavigationProp} from '@react-navigation/native';
+import {RouteProp} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
 const renderGenre = (genres: Genre[]) => {
   return genres.map(genre => genre.name).join(', ');
@@ -17,13 +18,12 @@ const renderGenre = (genres: Genre[]) => {
 const unicodeLeftArrow = '\u2190';
 export const MovieDetailScreen = ({
   route,
-  navigation,
 }: {
   route: RouteProp<{params: {movieId: Movie['id']}}, 'params'>;
-  navigation: NavigationProp<{params: {movieId: Movie['id']}}, 'params'>;
 }) => {
   const {movieId} = route.params;
   const {data: movie} = useMovieDetails(movieId);
+  const navigation = useNavigation();
 
   if (!movie) {
     return null;
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#111111',
     flex: 1,
   },
-  detailContainer: {width: '100%', gap: 8},
+  detailContainer: {width: '100%', gap: 8, paddingHorizontal: 8},
   back: {
     position: 'absolute',
     top: 8,

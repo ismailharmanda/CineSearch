@@ -65,6 +65,14 @@ export const UserNavigator = () => {
             name="Favorites"
             component={FavoritesScreen}
           />
+          <Stack.Screen
+            name="MovieDetail"
+            // @ts-ignore
+            component={MovieDetailScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
         </Stack.Navigator>
       );
     };
