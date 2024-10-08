@@ -1,33 +1,32 @@
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import {
   usePopularMovies,
   useNetworkConnectivity,
   useSearchMovies,
+  useFavoriteMutation,
+  useFavorites,
 } from '../hooks';
 import {View, FlatList, StyleSheet} from 'react-native';
 import {Genre as IGenre, Movie} from '../types';
 import {GENRES} from '../constants';
 import {GenreID} from '../types';
 import {Search, MovieCard, Genre} from '../components';
-import {toggleFavorite, getFavorites} from '../utils';
 
 export const HomeScreen = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [selectedGenres, setSelectedGenres] = useState<GenreID[]>([]);
-  const [favorites, setFavorites] = useState<string[]>([]);
-
-  useEffect(() => {
-    const fetchFavorites = async () => {
-      const favoritesFromStorage = await getFavorites();
-      setFavorites(favoritesFromStorage);
-    };
-    fetchFavorites();
-  }, []);
 
   const {data: popularData, fetchNextPage: fetchNextPopularPage} =
     usePopularMovies();
   const {data: searchData, fetchNextPage: fetchNextSearchPage} =
     useSearchMovies(searchTerm);
+
+  const {data: favoritesData, refetch: refetchFavorites} = useFavorites();
+
+  const {mutateAsync} = useFavoriteMutation();
+
+  const allFavoritesResult =
+    favoritesData?.pages.map(page => page.results).flat() || [];
 
   const allPopularResults =
     popularData?.pages.map(page => page.results).flat() || [];
@@ -49,11 +48,13 @@ export const HomeScreen = () => {
 
   useNetworkConnectivity();
 
-  const onFavorite = async (movieId: number) => {
-    await toggleFavorite(movieId);
-    const favoritesFromStorage = await getFavorites();
-    setFavorites(favoritesFromStorage);
+  const onFavorite = async (movieId: number, favorite: boolean) => {
+    await mutateAsync({movieId, favorite});
+    refetchFavorites();
   };
+
+  const isFavorite = (movieId: number) =>
+    allFavoritesResult.some(favorite => favorite.id === movieId);
 
   const renderMovieCard = ({item}: {item: Movie}) => {
     return (
@@ -62,8 +63,8 @@ export const HomeScreen = () => {
         posterPath={item.poster_path}
         vote_average={item.vote_average}
         onPress={() => {}}
-        onToggleFavorite={() => onFavorite(item.id)}
-        favorited={favorites.includes(item.id.toString())}
+        onToggleFavorite={() => onFavorite(item.id, !isFavorite(item.id))}
+        favorited={isFavorite(item.id)}
       />
     );
   };
