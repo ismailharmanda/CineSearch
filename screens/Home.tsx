@@ -11,10 +11,13 @@ import {Genre as IGenre, Movie} from '../types';
 import {GENRES} from '../constants';
 import {GenreID} from '../types';
 import {Search, MovieCard, Genre} from '../components';
+import {useNavigation} from '@react-navigation/native';
 
 export const HomeScreen = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [selectedGenres, setSelectedGenres] = useState<GenreID[]>([]);
+
+  const navigation = useNavigation();
 
   const {data: popularData, fetchNextPage: fetchNextPopularPage} =
     usePopularMovies();
@@ -62,7 +65,12 @@ export const HomeScreen = () => {
         title={item.title}
         posterPath={item.poster_path}
         vote_average={item.vote_average}
-        onPress={() => {}}
+        onPress={() =>
+          // @ts-ignore
+          navigation.navigate('MovieDetail', {
+            movieId: item.id,
+          })
+        }
         onToggleFavorite={() => onFavorite(item.id, !isFavorite(item.id))}
         favorited={isFavorite(item.id)}
       />
