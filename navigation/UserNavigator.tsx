@@ -1,15 +1,23 @@
 import React, {useMemo} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {HomeScreen, FavoritesScreen} from '../screens/';
+import {HomeScreen, FavoritesScreen, MovieDetailScreen} from '../screens/';
 import HomeIcon from '../assets/homeIcon/homeIcon.png';
 import HomeIconActive from '../assets/homeIconActive/homeIconActive.png';
 import FavoritesIcon from '../assets/favoritesIcon/favoritesIcon.png';
 import FavoritedIcon from '../assets/favoritedIcon/favoritedIcon.png';
 import {Image, ImageSourcePropType} from 'react-native';
 
+import {Movie} from '../types';
+
+type RootStackParamList = {
+  Home: undefined;
+  MovieDetail: {movieId: Movie['id']} | undefined;
+  Favorites: undefined;
+};
+
 const Tab = createBottomTabNavigator();
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export const UserNavigator = () => {
   const HomeStackScreen = useMemo(() => {
@@ -29,6 +37,14 @@ export const UserNavigator = () => {
             }}
             name="Home"
             component={HomeScreen}
+          />
+          <Stack.Screen
+            name="MovieDetail"
+            // @ts-ignore
+            component={MovieDetailScreen}
+            options={{
+              headerShown: false,
+            }}
           />
         </Stack.Navigator>
       );
