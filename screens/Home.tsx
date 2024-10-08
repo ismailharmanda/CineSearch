@@ -76,21 +76,31 @@ export const HomeScreen = () => {
     );
   };
 
+  const sortedGenresDependsOnIsActivated = GENRES.sort((a, b) => {
+    if (selectedGenres.includes(a.id) && !selectedGenres.includes(b.id)) {
+      return -1;
+    }
+    if (!selectedGenres.includes(a.id) && selectedGenres.includes(b.id)) {
+      return 1;
+    }
+    return 0;
+  });
+
   return (
     <View style={styles.container}>
       <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       <FlatList
+        style={styles.genresContainerStyle}
         contentContainerStyle={styles.genresContentContainerStyle}
         showsHorizontalScrollIndicator={false}
         horizontal
-        data={GENRES}
+        data={sortedGenresDependsOnIsActivated}
         renderItem={renderGenre}
       />
       <FlatList
         horizontal={false}
         numColumns={2}
         columnWrapperStyle={styles.movieCardsColumnWrapperStyle}
-        style={styles.movieCardsListStyle}
         onEndReached={() => {
           searchTerm ? fetchNextSearchPage() : fetchNextPopularPage();
         }}
@@ -115,12 +125,13 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     flex: 1,
     gap: 16,
+    flexDirection: 'column',
   },
   genresContentContainerStyle: {
     gap: 8,
   },
-  movieCardsListStyle: {
-    marginTop: 16,
+  genresContainerStyle: {
+    paddingBottom: 16,
   },
   movieCardsColumnWrapperStyle: {
     justifyContent: 'space-between',
