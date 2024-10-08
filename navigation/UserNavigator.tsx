@@ -75,7 +75,7 @@ export const UserNavigator = () => {
             color: 'white',
           },
           tabBarShowLabel: false,
-          tabBarIcon: ({color, focused}) => (
+          tabBarIcon: ({focused}) => (
             <Image
               source={
                 focused
@@ -107,7 +107,7 @@ export const UserNavigator = () => {
           headerTitleStyle: {
             color: 'white',
           },
-          tabBarIcon: ({color, focused}) => (
+          tabBarIcon: ({focused}) => (
             <Image
               source={
                 focused
