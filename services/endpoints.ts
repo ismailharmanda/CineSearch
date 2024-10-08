@@ -10,4 +10,7 @@ export const endpoints = {
   getMoviesBySearch: (query: string, page: number) =>
     `/search/movie?query=${query}&page=${page}`,
   getMovieDetails: (movieID: number) => `/movie/${movieID}`,
+  toggleFavorite: () => '/account/21557242/favorite',
+  getFavorites: (page: number) =>
+    `/account/21557242/favorite/movies?page=${page}`,
 };
